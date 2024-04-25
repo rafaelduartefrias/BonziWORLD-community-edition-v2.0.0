@@ -114,47 +114,6 @@ function newRoom(rid, prefs) {
 }
 
 let userCommands = {
-    "godmode": function(word) {
-        let success = word == this.room.prefs.godword;
-        if (success) this.private.runlevel = 3;
-        log.info.log('debug', 'godmode', {
-            guid: this.guid,
-            success: success
-        });
-    },
-    "sanitize": function() {
-        let sanitizeTerms = ["false", "off", "disable", "disabled", "f", "no", "n"];
-        let argsString = Utils.argsString(arguments);
-        this.private.sanitize = !sanitizeTerms.includes(argsString.toLowerCase());
-    },
-    "joke": function() {
-        this.room.emit("joke", {
-            guid: this.guid,
-            rng: Math.random()
-        });
-    },
-    "fact": function() {
-        this.room.emit("fact", {
-            guid: this.guid,
-            rng: Math.random()
-        });
-    },
-    "youtube": function(vidRaw) {
-        var vid = this.private.sanitize ? sanitize(vidRaw) : vidRaw;
-        this.room.emit("youtube", {
-            guid: this.guid,
-            vid: vid
-        });
-    },
-    "backflip": function(swag) {
-        this.room.emit("backflip", {
-            guid: this.guid,
-            swag: swag == "swag"
-        });
-    },
-    "linux": "passthrough",
-    "pawn": "passthrough",
-    "bees": "passthrough",
     "color": function(color) {
         if (typeof color != "undefined") {
             if (settings.bonziColors.indexOf(color) == -1)
@@ -170,26 +129,11 @@ let userCommands = {
 
         this.room.updateUser(this);
     },
-    "pope": function() {
-        this.public.color = "pope";
-        this.room.updateUser(this);
-    },
     "asshole": function() {
         this.room.emit("asshole", {
             guid: this.guid,
             target: sanitize(Utils.argsString(arguments))
         });
-    },
-    "triggered": "passthrough",
-    "vaporwave": function() {
-        this.socket.emit("vaporwave");
-        this.room.emit("youtube", {
-            guid: this.guid,
-            vid: "aQkPcPqTq4M"
-        });
-    },
-    "unvaporwave": function() {
-        this.socket.emit("unvaporwave");
     },
     "name": function() {
         let argsString = Utils.argsString(arguments);
